@@ -27,25 +27,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  00003024  2**0
                   CONTENTS, READONLY
- 12 .debug_info   0000295c  00000000  00000000  0000304d  2**0
+ 12 .debug_info   00002957  00000000  00000000  0000304d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00000e66  00000000  00000000  000059a9  2**0
+ 13 .debug_abbrev 00000e79  00000000  00000000  000059a4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00000410  00000000  00000000  00006810  2**3
+ 14 .debug_aranges 00000410  00000000  00000000  00006820  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_rnglists 000002e9  00000000  00000000  00006c20  2**0
+ 15 .debug_rnglists 000002e9  00000000  00000000  00006c30  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  00015606  00000000  00000000  00006f09  2**0
+ 16 .debug_macro  00015606  00000000  00000000  00006f19  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00004acc  00000000  00000000  0001c50f  2**0
+ 17 .debug_line   00004acc  00000000  00000000  0001c51f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00079c21  00000000  00000000  00020fdb  2**0
+ 18 .debug_str    00079c21  00000000  00000000  00020feb  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  0009abfc  2**0
+ 19 .comment      00000043  00000000  00000000  0009ac0c  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00000e0c  00000000  00000000  0009ac40  2**2
+ 20 .debug_frame  00000e0c  00000000  00000000  0009ac50  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000072  00000000  00000000  0009ba4c  2**0
+ 21 .debug_line_str 00000072  00000000  00000000  0009ba5c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -79,8 +79,8 @@ Disassembly of section .text:
  8000148:	08001404 	.word	0x08001404
 
 0800014c <tampa_aberta>:
- *   "LED -> set indica ligado"
- *   "Botão -> Reset Indica Botão APERTADO, ex: Tampa Fechada"
+ *  será a operação de lavagem que o sistema entrará.
+ *
  *
  */
 
@@ -150,8 +150,8 @@ void estado_inicio(){
  80001ac:	f000 fa6c 	bl	8000688 <HAL_Delay>
 		tampa_aberta();
  80001b0:	f7ff ffcc 	bl	800014c <tampa_aberta>
-		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_ENXAGUE_Pin))){	// Botão Apertado (GND), Indica Proximo estado
-			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);	// Desliga led do ponto inicial
+		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_ENXAGUE_Pin))){
+			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);
 			estado_atual = ST_ENXAGUE;
 		}
 	}
@@ -162,14 +162,14 @@ void estado_inicio(){
 		HAL_Delay(1000);
  80001ba:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
  80001be:	f000 fa63 	bl	8000688 <HAL_Delay>
-		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_MOLHO_Pin))){ // Botão Apertado (GND), Indica Proximo estado
+		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_MOLHO_Pin))){
  80001c2:	2101      	movs	r1, #1
  80001c4:	4817      	ldr	r0, [pc, #92]	@ (8000224 <estado_inicio+0xa0>)
  80001c6:	f000 fce3 	bl	8000b90 <HAL_GPIO_ReadPin>
  80001ca:	4603      	mov	r3, r0
  80001cc:	2b00      	cmp	r3, #0
  80001ce:	d107      	bne.n	80001e0 <estado_inicio+0x5c>
-			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET); 	// Desliga led do ponto inicial
+			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);
  80001d0:	2200      	movs	r2, #0
  80001d2:	2180      	movs	r1, #128	@ 0x80
  80001d4:	4812      	ldr	r0, [pc, #72]	@ (8000220 <estado_inicio+0x9c>)
@@ -178,14 +178,14 @@ void estado_inicio(){
  80001da:	4b13      	ldr	r3, [pc, #76]	@ (8000228 <estado_inicio+0xa4>)
  80001dc:	2201      	movs	r2, #1
  80001de:	701a      	strb	r2, [r3, #0]
-		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_LAVAR_Pin))){	// Botão Apertado (GND), Indica Proximo estado
+		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_LAVAR_Pin))){
  80001e0:	2102      	movs	r1, #2
  80001e2:	4810      	ldr	r0, [pc, #64]	@ (8000224 <estado_inicio+0xa0>)
  80001e4:	f000 fcd4 	bl	8000b90 <HAL_GPIO_ReadPin>
  80001e8:	4603      	mov	r3, r0
  80001ea:	2b00      	cmp	r3, #0
  80001ec:	d107      	bne.n	80001fe <estado_inicio+0x7a>
-			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);	// Desliga led do ponto inicial
+			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);
  80001ee:	2200      	movs	r2, #0
  80001f0:	2180      	movs	r1, #128	@ 0x80
  80001f2:	480b      	ldr	r0, [pc, #44]	@ (8000220 <estado_inicio+0x9c>)
@@ -194,14 +194,14 @@ void estado_inicio(){
  80001f8:	4b0b      	ldr	r3, [pc, #44]	@ (8000228 <estado_inicio+0xa4>)
  80001fa:	2202      	movs	r2, #2
  80001fc:	701a      	strb	r2, [r3, #0]
-		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_ENXAGUE_Pin))){	// Botão Apertado (GND), Indica Proximo estado
+		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_ENXAGUE_Pin))){
  80001fe:	2104      	movs	r1, #4
  8000200:	4808      	ldr	r0, [pc, #32]	@ (8000224 <estado_inicio+0xa0>)
  8000202:	f000 fcc5 	bl	8000b90 <HAL_GPIO_ReadPin>
  8000206:	4603      	mov	r3, r0
  8000208:	2b00      	cmp	r3, #0
  800020a:	d107      	bne.n	800021c <estado_inicio+0x98>
-			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);	// Desliga led do ponto inicial
+			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);
  800020c:	2200      	movs	r2, #0
  800020e:	2180      	movs	r1, #128	@ 0x80
  8000210:	4803      	ldr	r0, [pc, #12]	@ (8000220 <estado_inicio+0x9c>)
@@ -233,7 +233,7 @@ void estado_molho(){
  800023a:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
  800023e:	f000 fa23 	bl	8000688 <HAL_Delay>
 	// Caso tampa fechada
-	if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){ // como pull-up, retorna 0
+	if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){
  8000242:	2120      	movs	r1, #32
  8000244:	4810      	ldr	r0, [pc, #64]	@ (8000288 <estado_molho+0x5c>)
  8000246:	f000 fca3 	bl	8000b90 <HAL_GPIO_ReadPin>
@@ -246,7 +246,7 @@ void estado_molho(){
 		HAL_Delay(1000);
  8000254:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
  8000258:	f000 fa16 	bl	8000688 <HAL_Delay>
-		HAL_GPIO_WritePin(GPIOA, LED_MOLHO_Pin, GPIO_PIN_RESET);	// Desliga led indicando estado molho terminado.
+		HAL_GPIO_WritePin(GPIOA, LED_MOLHO_Pin, GPIO_PIN_RESET);
  800025c:	2200      	movs	r2, #0
  800025e:	2102      	movs	r1, #2
  8000260:	4808      	ldr	r0, [pc, #32]	@ (8000284 <estado_molho+0x58>)
@@ -258,14 +258,14 @@ void estado_molho(){
 	}
 
 	// Caso tampa aberta.
-	if((HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){ // Botão em VCC, Porta Aberta
+	if((HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){
  800026c:	2120      	movs	r1, #32
  800026e:	4806      	ldr	r0, [pc, #24]	@ (8000288 <estado_molho+0x5c>)
  8000270:	f000 fc8e 	bl	8000b90 <HAL_GPIO_ReadPin>
  8000274:	4603      	mov	r3, r0
  8000276:	2b00      	cmp	r3, #0
  8000278:	d001      	beq.n	800027e <estado_molho+0x52>
-		tampa_aberta(); // Acende led indicando Porta Aberta
+		tampa_aberta();
  800027a:	f7ff ff67 	bl	800014c <tampa_aberta>
 	}
 
@@ -282,15 +282,15 @@ void estado_molho(){
 void estado_lavar(){
  8000290:	b580      	push	{r7, lr}
  8000292:	af00      	add	r7, sp, #0
-	HAL_GPIO_WritePin(GPIOA,LED_LAVAR_Pin, GPIO_PIN_SET); // liga o led indicando estado lavar iniciando.
+	HAL_GPIO_WritePin(GPIOA,LED_LAVAR_Pin, GPIO_PIN_SET);
  8000294:	2201      	movs	r2, #1
  8000296:	2104      	movs	r1, #4
  8000298:	4808      	ldr	r0, [pc, #32]	@ (80002bc <estado_lavar+0x2c>)
  800029a:	f000 fc90 	bl	8000bbe <HAL_GPIO_WritePin>
-	HAL_Delay(1000); // delay de 5 segundos
+	HAL_Delay(1000);
  800029e:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
  80002a2:	f000 f9f1 	bl	8000688 <HAL_Delay>
-	HAL_GPIO_WritePin(GPIOA,LED_LAVAR_Pin, GPIO_PIN_RESET);	// Desliga o led indicando estado lavar finalizado.
+	HAL_GPIO_WritePin(GPIOA,LED_LAVAR_Pin, GPIO_PIN_RESET);
  80002a6:	2200      	movs	r2, #0
  80002a8:	2104      	movs	r1, #4
  80002aa:	4804      	ldr	r0, [pc, #16]	@ (80002bc <estado_lavar+0x2c>)
@@ -311,20 +311,20 @@ void estado_lavar(){
 void estado_enxague(){
  80002c4:	b580      	push	{r7, lr}
  80002c6:	af00      	add	r7, sp, #0
-	HAL_GPIO_WritePin(GPIOA, LED_ENXAGUE_Pin, GPIO_PIN_SET);	// Liga LED indicando modo enxague.
+	HAL_GPIO_WritePin(GPIOA, LED_ENXAGUE_Pin, GPIO_PIN_SET);
  80002c8:	2201      	movs	r2, #1
  80002ca:	2108      	movs	r1, #8
  80002cc:	4812      	ldr	r0, [pc, #72]	@ (8000318 <estado_enxague+0x54>)
  80002ce:	f000 fc76 	bl	8000bbe <HAL_GPIO_WritePin>
 
-	if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){ // tampa fechada
+	if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){
  80002d2:	2120      	movs	r1, #32
  80002d4:	4811      	ldr	r0, [pc, #68]	@ (800031c <estado_enxague+0x58>)
  80002d6:	f000 fc5b 	bl	8000b90 <HAL_GPIO_ReadPin>
  80002da:	4603      	mov	r3, r0
  80002dc:	2b00      	cmp	r3, #0
  80002de:	d110      	bne.n	8000302 <estado_enxague+0x3e>
-		HAL_GPIO_WritePin(GPIOA,LED_PARAR_Pin, GPIO_PIN_RESET); // Desliga led indicando Porta fechada
+		HAL_GPIO_WritePin(GPIOA,LED_PARAR_Pin, GPIO_PIN_RESET);
  80002e0:	2200      	movs	r2, #0
  80002e2:	2140      	movs	r1, #64	@ 0x40
  80002e4:	480c      	ldr	r0, [pc, #48]	@ (8000318 <estado_enxague+0x54>)
@@ -333,7 +333,7 @@ void estado_enxague(){
 		HAL_Delay(1000);
  80002ea:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
  80002ee:	f000 f9cb 	bl	8000688 <HAL_Delay>
-		HAL_GPIO_WritePin(GPIOA,LED_ENXAGUE_Pin, GPIO_PIN_RESET);	// Desliga o led indicando estado lavar finalizado.
+		HAL_GPIO_WritePin(GPIOA,LED_ENXAGUE_Pin, GPIO_PIN_RESET);
  80002f2:	2200      	movs	r2, #0
  80002f4:	2108      	movs	r1, #8
  80002f6:	4808      	ldr	r0, [pc, #32]	@ (8000318 <estado_enxague+0x54>)
@@ -352,7 +352,7 @@ void estado_enxague(){
  800030a:	4603      	mov	r3, r0
  800030c:	2b00      	cmp	r3, #0
  800030e:	d001      	beq.n	8000314 <estado_enxague+0x50>
-		tampa_aberta(); // Acende led indicando Porta Aberta
+		tampa_aberta();
  8000310:	f7ff ff1c 	bl	800014c <tampa_aberta>
 	}
 
@@ -452,11 +452,11 @@ int main(void)
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
  8000398:	f000 f848 	bl	800042c <MX_GPIO_Init>
-	  }else{
-		  HAL_GPIO_WritePin(GPIOA,LED_PARAR_Pin, GPIO_PIN_RESET);
-		  HAL_Delay(100);
-	  }
-*/
+
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
+	while (1)
+	{
 		tabela_estados[estado_atual]();
  800039c:	4b03      	ldr	r3, [pc, #12]	@ (80003ac <main+0x20>)
  800039e:	781b      	ldrb	r3, [r3, #0]

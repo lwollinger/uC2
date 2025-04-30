@@ -74,12 +74,6 @@ void (*tabela_estados[])();
  *  será a operação de lavagem que o sistema entrará.
  *
  *
- * OBS: SET -> N.L 1 vcc
- * 		RESET -> N.L 0 gnd
- *
- *   "LED -> set indica ligado"
- *   "Botão -> Reset Indica Botão APERTADO, ex: Tampa Fechada"
- *
  */
 
 void tampa_aberta(){
@@ -111,16 +105,16 @@ void estado_inicio(){
 		HAL_Delay(1000);
 
 		// Seleção dos modos
-		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_MOLHO_Pin))){ // Botão Apertado (GND), Indica Proximo estado
-			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET); 	// Desliga led do ponto inicial
+		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_MOLHO_Pin))){
+			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);
 			estado_atual = ST_MOLHO;
 		}
-		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_LAVAR_Pin))){	// Botão Apertado (GND), Indica Proximo estado
-			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);	// Desliga led do ponto inicial
+		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_LAVAR_Pin))){
+			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);
 			estado_atual = ST_LAVAR;
 		}
-		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_ENXAGUE_Pin))){	// Botão Apertado (GND), Indica Proximo estado
-			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);	// Desliga led do ponto inicial
+		if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_ENXAGUE_Pin))){
+			HAL_GPIO_WritePin(GPIOA,LED_INICIO_Pin, GPIO_PIN_RESET);
 			estado_atual = ST_ENXAGUE;
 		}
 	}
@@ -132,42 +126,42 @@ void estado_molho(){
 	HAL_GPIO_WritePin(GPIOA, LED_MOLHO_Pin, GPIO_PIN_SET); // liga o led indicando estado molho iniciando.
 	HAL_Delay(1000);
 	// Caso tampa fechada
-	if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){ // como pull-up, retorna 0
+	if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){
 		tampa_fechada();
 
 		HAL_Delay(1000);
-		HAL_GPIO_WritePin(GPIOA, LED_MOLHO_Pin, GPIO_PIN_RESET);	// Desliga led indicando estado molho terminado.
+		HAL_GPIO_WritePin(GPIOA, LED_MOLHO_Pin, GPIO_PIN_RESET);
 		estado_atual = ST_LAVAR;
 	}
 
 	// Caso tampa aberta.
-	if((HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){ // Botão em VCC, Porta Aberta
-		tampa_aberta(); // Acende led indicando Porta Aberta
+	if((HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){
+		tampa_aberta();
 	}
 
 }
 
 void estado_lavar(){
-	HAL_GPIO_WritePin(GPIOA,LED_LAVAR_Pin, GPIO_PIN_SET); // liga o led indicando estado lavar iniciando.
-	HAL_Delay(1000); // delay de 5 segundos
-	HAL_GPIO_WritePin(GPIOA,LED_LAVAR_Pin, GPIO_PIN_RESET);	// Desliga o led indicando estado lavar finalizado.
+	HAL_GPIO_WritePin(GPIOA,LED_LAVAR_Pin, GPIO_PIN_SET);
+	HAL_Delay(1000);
+	HAL_GPIO_WritePin(GPIOA,LED_LAVAR_Pin, GPIO_PIN_RESET);
 	estado_atual = ST_ENXAGUE;
 }
 
 void estado_enxague(){
-	HAL_GPIO_WritePin(GPIOA, LED_ENXAGUE_Pin, GPIO_PIN_SET);	// Liga LED indicando modo enxague.
+	HAL_GPIO_WritePin(GPIOA, LED_ENXAGUE_Pin, GPIO_PIN_SET);
 
-	if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){ // tampa fechada
-		HAL_GPIO_WritePin(GPIOA,LED_PARAR_Pin, GPIO_PIN_RESET); // Desliga led indicando Porta fechada
+	if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){
+		HAL_GPIO_WritePin(GPIOA,LED_PARAR_Pin, GPIO_PIN_RESET);
 
 		HAL_Delay(1000);
-		HAL_GPIO_WritePin(GPIOA,LED_ENXAGUE_Pin, GPIO_PIN_RESET);	// Desliga o led indicando estado lavar finalizado.
+		HAL_GPIO_WritePin(GPIOA,LED_ENXAGUE_Pin, GPIO_PIN_RESET);
 		estado_atual = ST_CENTRIFUGA;
 	}
 
 	// Caso tampa aberta.
 	if((HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){
-		tampa_aberta(); // Acende led indicando Porta Aberta
+		tampa_aberta();
 	}
 
 }
@@ -231,18 +225,7 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-/*
-	  if(!(HAL_GPIO_ReadPin(GPIOB, BOTAO_TAMPA_Pin))){
-		  HAL_GPIO_WritePin(GPIOA,LED_PARAR_Pin, GPIO_PIN_SET);
-		  HAL_Delay(100);
-	  }else{
-		  HAL_GPIO_WritePin(GPIOA,LED_PARAR_Pin, GPIO_PIN_RESET);
-		  HAL_Delay(100);
-	  }
-*/
 		tabela_estados[estado_atual]();
-
-
 
 		/* USER CODE END WHILE */
 
